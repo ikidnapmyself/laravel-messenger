@@ -14,8 +14,8 @@ class CreateParticipantsTable extends Migration
      */
     public function up()
     {
-        Schema::create(Models::table('participants'), function (Blueprint $table) {
-            $table->increments('id');
+        Schema::create(Models::table(config('messenger.participants_table')), function (Blueprint $table) {
+            $table->uuid('id')->primary();
             $table->integer('thread_id')->unsigned();
             $table->integer('user_id')->unsigned();
             $table->timestamp('last_read')->nullable();
@@ -30,6 +30,6 @@ class CreateParticipantsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists(Models::table('participants'));
+        Schema::dropIfExists(Models::table(config('messenger.participants_table')));
     }
 }

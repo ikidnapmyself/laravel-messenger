@@ -14,8 +14,8 @@ class CreateThreadsTable extends Migration
      */
     public function up()
     {
-        Schema::create(Models::table('threads'), function (Blueprint $table) {
-            $table->increments('id');
+        Schema::create(Models::table(config('messenger.threads_table')), function (Blueprint $table) {
+            $table->uuid('id')->primary();
             $table->string('subject');
             $table->timestamps();
         });
@@ -28,6 +28,6 @@ class CreateThreadsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists(Models::table('threads'));
+        Schema::dropIfExists(Models::table(config('messenger.threads_table')));
     }
 }

@@ -14,8 +14,8 @@ class CreateMessagesTable extends Migration
      */
     public function up()
     {
-        Schema::create(Models::table('messages'), function (Blueprint $table) {
-            $table->increments('id');
+        Schema::create(Models::table(config('messenger.messages_table')), function (Blueprint $table) {
+            $table->uuid('id')->primary();
             $table->integer('thread_id')->unsigned();
             $table->integer('user_id')->unsigned();
             $table->text('body');
@@ -30,6 +30,6 @@ class CreateMessagesTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists(Models::table('messages'));
+        Schema::dropIfExists(Models::table(config('messenger.messages_table')));
     }
 }
