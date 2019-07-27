@@ -2,6 +2,7 @@
 
 namespace Cmgmyr\Messenger\Models;
 
+use Cmgmyr\Messenger\Traits\HasUUID;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model as Eloquent;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
@@ -10,7 +11,7 @@ use Illuminate\Support\Carbon;
 
 class Thread extends Eloquent
 {
-    use SoftDeletes;
+    use SoftDeletes, HasUUID;
 
     /**
      * The database table used by the model.
@@ -45,7 +46,7 @@ class Thread extends Eloquent
      */
     public function __construct(array $attributes = [])
     {
-        $this->table = Models::table('threads');
+        $this->table = config('messenger.threads_table');
 
         parent::__construct($attributes);
     }

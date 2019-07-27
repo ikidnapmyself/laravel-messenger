@@ -151,11 +151,11 @@ class EloquentThreadTest extends TestCase
     {
         $thread = $this->faktory->create('thread');
         $user_1 = $this->faktory->build('participant');
-        $user_2 = $this->faktory->build('participant', ['user_id' => 2]);
+        $user_2 = $this->faktory->build('participant', ['user_id' => 'UUID-2']);
         $thread->participants()->saveMany([$user_1, $user_2]);
 
         $threadUserIds = $thread->users()->get()->pluck('id')->toArray();
-        $this->assertArraySubset([1, 2], $threadUserIds);
+        $this->assertArraySubset(['UUID-1', 'UUID-2'], $threadUserIds);
     }
 
     /** @test */
@@ -207,7 +207,7 @@ class EloquentThreadTest extends TestCase
     /** @test */
     public function it_should_add_participants_to_a_thread_with_array()
     {
-        $participants = [1, 2, 3];
+        $participants = ['UUID-1', 'UUID-2', 'UUID-3'];
 
         $thread = $this->faktory->create('thread');
 
@@ -221,7 +221,7 @@ class EloquentThreadTest extends TestCase
     {
         $thread = $this->faktory->create('thread');
 
-        $thread->addParticipant(1, 2);
+        $thread->addParticipant('UUID-1', 'UUID-2');
 
         $this->assertEquals(2, $thread->participants()->count());
     }
@@ -281,7 +281,7 @@ class EloquentThreadTest extends TestCase
     {
         $thread = $this->faktory->create('thread');
 
-        $thread->getParticipantFromUser(99);
+        $thread->getParticipantFromUser('UUID-99');
     }
 
     /** @test */
@@ -291,8 +291,8 @@ class EloquentThreadTest extends TestCase
         $thread = $this->faktory->create('thread');
 
         $user_1 = $this->faktory->build('participant', ['deleted_at' => $deleted_at]);
-        $user_2 = $this->faktory->build('participant', ['user_id' => 2, 'deleted_at' => $deleted_at]);
-        $user_3 = $this->faktory->build('participant', ['user_id' => 3, 'deleted_at' => $deleted_at]);
+        $user_2 = $this->faktory->build('participant', ['user_id' => 'UUID-2', 'deleted_at' => $deleted_at]);
+        $user_3 = $this->faktory->build('participant', ['user_id' => 'UUID-3', 'deleted_at' => $deleted_at]);
 
         $thread->participants()->saveMany([$user_1, $user_2, $user_3]);
 
@@ -327,18 +327,18 @@ class EloquentThreadTest extends TestCase
         $thread = $this->faktory->create('thread');
 
         $participant_1 = $this->faktory->build('participant');
-        $participant_2 = $this->faktory->build('participant', ['user_id' => 2]);
-        $participant_3 = $this->faktory->build('participant', ['user_id' => 3]);
+        $participant_2 = $this->faktory->build('participant', ['user_id' => 'UUID-2']);
+        $participant_3 = $this->faktory->build('participant', ['user_id' => 'UUID-3']);
 
         $thread->participants()->saveMany([$participant_1, $participant_2, $participant_3]);
 
         $string = $thread->participantsString();
         $this->assertEquals('Chris Gmyr, Adam Wathan, Taylor Otwell', $string);
 
-        $string = $thread->participantsString(1);
+        $string = $thread->participantsString('UUID-1');
         $this->assertEquals('Adam Wathan, Taylor Otwell', $string);
 
-        $string = $thread->participantsString(1, ['email']);
+        $string = $thread->participantsString('UUID-1', ['email']);
         $this->assertEquals('adam@test.com, taylor@test.com', $string);
     }
 
@@ -348,13 +348,13 @@ class EloquentThreadTest extends TestCase
         $thread = $this->faktory->create('thread');
 
         $participant_1 = $this->faktory->build('participant');
-        $participant_2 = $this->faktory->build('participant', ['user_id' => 2]);
+        $participant_2 = $this->faktory->build('participant', ['user_id' => 'UUID-2']);
 
         $thread->participants()->saveMany([$participant_1, $participant_2]);
 
-        $this->assertTrue($thread->hasParticipant(1));
-        $this->assertTrue($thread->hasParticipant(2));
-        $this->assertFalse($thread->hasParticipant(3));
+        $this->assertTrue($thread->hasParticipant('UUID-1'));
+        $this->assertTrue($thread->hasParticipant('UUID-2'));
+        $this->assertFalse($thread->hasParticipant('UUID-3'));
     }
 
     /** @test */
@@ -363,11 +363,11 @@ class EloquentThreadTest extends TestCase
         $thread = $this->faktory->create('thread');
 
         $participant_1 = $this->faktory->build('participant');
-        $participant_2 = $this->faktory->build('participant', ['user_id' => 2]);
+        $participant_2 = $this->faktory->build('participant', ['user_id' => 'UUID-2']);
 
         $thread->participants()->saveMany([$participant_1, $participant_2]);
 
-        $thread->removeParticipant(2);
+        $thread->removeParticipant('UUID-2');
 
         $this->assertEquals(1, $thread->participants()->count());
     }
@@ -378,11 +378,11 @@ class EloquentThreadTest extends TestCase
         $thread = $this->faktory->create('thread');
 
         $participant_1 = $this->faktory->build('participant');
-        $participant_2 = $this->faktory->build('participant', ['user_id' => 2]);
+        $participant_2 = $this->faktory->build('participant', ['user_id' => 'UUID-2']);
 
         $thread->participants()->saveMany([$participant_1, $participant_2]);
 
-        $thread->removeParticipant([1, 2]);
+        $thread->removeParticipant(['UUID-1', 'UUID-2']);
 
         $this->assertEquals(0, $thread->participants()->count());
     }
@@ -393,11 +393,11 @@ class EloquentThreadTest extends TestCase
         $thread = $this->faktory->create('thread');
 
         $participant_1 = $this->faktory->build('participant');
-        $participant_2 = $this->faktory->build('participant', ['user_id' => 2]);
+        $participant_2 = $this->faktory->build('participant', ['user_id' => 'UUID-2']);
 
         $thread->participants()->saveMany([$participant_1, $participant_2]);
 
-        $thread->removeParticipant(1, 2);
+        $thread->removeParticipant('UUID-1', 'UUID-2');
 
         $this->assertEquals(0, $thread->participants()->count());
     }
@@ -408,7 +408,7 @@ class EloquentThreadTest extends TestCase
         $thread = $this->faktory->create('thread');
 
         $participant_1 = $this->faktory->build('participant');
-        $participant_2 = $this->faktory->build('participant', ['user_id' => 2]);
+        $participant_2 = $this->faktory->build('participant', ['user_id' => 'UUID-2']);
 
         $message_1 = $this->faktory->build('message', [
             'created_at' => Carbon::now(),

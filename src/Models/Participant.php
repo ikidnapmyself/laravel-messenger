@@ -2,12 +2,13 @@
 
 namespace Cmgmyr\Messenger\Models;
 
+use Cmgmyr\Messenger\Traits\HasUUID;
 use Illuminate\Database\Eloquent\Model as Eloquent;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Participant extends Eloquent
 {
-    use SoftDeletes;
+    use SoftDeletes, HasUUID;
 
     /**
      * The database table used by the model.
@@ -35,7 +36,7 @@ class Participant extends Eloquent
      */
     public function __construct(array $attributes = [])
     {
-        $this->table = Models::table('participants');
+        $this->table = config('messenger.participants_table');
 
         parent::__construct($attributes);
     }

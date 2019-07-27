@@ -90,7 +90,7 @@ class TestCase extends Orchestra
         DB::schema()->create(
             'users',
             function ($table) {
-                $table->increments('id');
+                $table->uuid('id');
                 $table->string('name');
                 $table->string('email')->unique();
                 $table->enum('notify', ['y', 'n'])->default('y');
@@ -104,9 +104,9 @@ class TestCase extends Orchestra
      */
     private function seedUsersTable()
     {
-        DB::insert('INSERT INTO ' . DB::getTablePrefix() . 'users (id, name, email, created_at, updated_at) VALUES (?, ?, ?, datetime(), datetime())', [1, 'Chris Gmyr', 'chris@test.com']);
-        DB::insert('INSERT INTO ' . DB::getTablePrefix() . 'users (id, name, email, created_at, updated_at) VALUES (?, ?, ?, datetime(), datetime())', [2, 'Adam Wathan', 'adam@test.com']);
-        DB::insert('INSERT INTO ' . DB::getTablePrefix() . 'users (id, name, email, created_at, updated_at) VALUES (?, ?, ?, datetime(), datetime())', [3, 'Taylor Otwell', 'taylor@test.com']);
+        DB::insert('INSERT INTO ' . DB::getTablePrefix() . 'users (id, name, email, created_at, updated_at) VALUES (?, ?, ?, datetime(), datetime())', ['UUID-1', 'Chris Gmyr', 'chris@test.com']);
+        DB::insert('INSERT INTO ' . DB::getTablePrefix() . 'users (id, name, email, created_at, updated_at) VALUES (?, ?, ?, datetime(), datetime())', ['UUID-2', 'Adam Wathan', 'adam@test.com']);
+        DB::insert('INSERT INTO ' . DB::getTablePrefix() . 'users (id, name, email, created_at, updated_at) VALUES (?, ?, ?, datetime(), datetime())', ['UUID-3', 'Taylor Otwell', 'taylor@test.com']);
     }
 
     /**
@@ -117,7 +117,7 @@ class TestCase extends Orchestra
         DB::schema()->create(
             'threads',
             function ($table) {
-                $table->increments('id');
+                $table->uuid('id');
                 $table->string('subject');
                 $table->timestamps();
                 $table->softDeletes();
@@ -133,9 +133,9 @@ class TestCase extends Orchestra
         DB::schema()->create(
             'messages',
             function ($table) {
-                $table->increments('id');
-                $table->integer('thread_id')->unsigned();
-                $table->integer('user_id')->unsigned();
+                $table->uuid('id');
+                $table->uuid('thread_id');
+                $table->uuid('user_id');
                 $table->text('body');
                 $table->timestamps();
                 $table->softDeletes();
@@ -151,9 +151,9 @@ class TestCase extends Orchestra
         DB::schema()->create(
             'participants',
             function ($table) {
-                $table->increments('id');
-                $table->integer('thread_id')->unsigned();
-                $table->integer('user_id')->unsigned();
+                $table->uuid('id');
+                $table->uuid('thread_id');
+                $table->uuid('user_id');
                 $table->timestamp('last_read')->nullable();
                 $table->timestamps();
                 $table->softDeletes();
